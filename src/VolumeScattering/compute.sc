@@ -22,10 +22,6 @@ struct NoopImage3D { int noop; };
 struct rayQueryKHR { int noop; };
 struct accelerationStructureKHR { int noop; };
 
-uvec3 LocalInvocationID;
-uint LocalInvocationIndex;
-uvec3 GlobalInvocationID;
-uvec3 WorkGroupID;
 
 void Scattering()
 {
@@ -72,6 +68,11 @@ void Scattering()
 NUM_THREADS(8, 8, 1)
 void main()
 {
+uvec3 LocalInvocationID;
+uint LocalInvocationIndex;
+uvec3 GlobalInvocationID;
+uvec3 WorkGroupID;
+
     LocalInvocationID = gl_LocalInvocationID;
     LocalInvocationIndex = gl_LocalInvocationIndex;
     GlobalInvocationID = gl_GlobalInvocationID;
