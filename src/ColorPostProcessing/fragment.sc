@@ -108,15 +108,16 @@ void main() {
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
     color *= vignette;
 
-    color = pow(color, vec3_splat(1.0 / 2.2));
    
    vec4 finalCol = vec4(color, 1.0);
-          vec4 Rcolor = texture2D(s_RasterizedColor, uv);
+vec4 Rcolor = texture2D(s_RasterizedColor, uv);
  
    if (RasterizedColorEnabled.x > 0.0)
     {
          finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.a)) + finalCol.rgb;
     }
+    finalCol.rgb = pow(finalCol.rgb, vec3_splat(1.0 / 2.2));
+  
   gl_FragColor =finalCol;
 }
 
