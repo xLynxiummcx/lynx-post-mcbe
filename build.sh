@@ -4,6 +4,6 @@
 set -e
 
 # Run Lazurite build on ./src for Windows
-lazurite build ./src -p windows
+lazurite build ./src -p custom
 
 echo " Build finished successfully."

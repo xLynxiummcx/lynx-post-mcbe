@@ -7,6 +7,8 @@ SAMPLER2D_AUTOREG(s_AverageLuminance);
 SAMPLER2D_AUTOREG(s_PreExposureLuminance);
 SAMPLER2D_AUTOREG(s_RasterizedColor);
 
+uniform highp vec4 RasterizedColorEnabled;
+
 vec3 RRTAndODTFit(vec3 v) {
     vec3 a = v * (v + 0.0245786) - 0.000090537;
     vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
@@ -108,7 +110,13 @@ void main() {
 
     color = pow(color, vec3_splat(1.0 / 2.2));
    
-  gl_FragColor =vec4(color, 1.0);
+   vec4 finalCol = vec4(color, 1.0);
+   if (RasterizedColorEnabled.x > 0.0)
+    {
+        highp vec4 Rcolor = texture(s_RasterizedColor, v_texcoord0.xy);
+         finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.w)) + finalCol.xyz;
+    }
+  gl_FragColor =finalCol;
 }
 
 
