@@ -3,55 +3,79 @@
 
 NUM_THREADS(8, 8, 1)
 
+// Uniforms
 uniform vec4 VolumeDimensions; // x: width, y: height, z: depth
 uniform vec4 VolumeNearFar;    // x: near, y: far
 
-IMAGE2D_ARRAY_RO(s_LightingBuffer, rgba16f, 0);
-IMAGE2D_ARRAY_WO(s_ScatteringBuffer, rgba16f, 1);
+// Buffers
+IMAGE2D_ARRAY_RO_AUTOREG(s_LightingBuffer, rgba16f);
+IMAGE2D_ARRAY_WR_AUTOREG(s_ScatteringBuffer, rgba16f);
 
-void main()
+// Convert logarithmic depth to linear
+float logToLinearDepth(float logDepth) {
+    return (exp(4.0 * logDepth) - 1.0) / (exp(4.0) - 1.0);
+}
+
+struct NoopSampler { int noop; };
+struct NoopImage2D { int noop; };
+struct NoopImage3D { int noop; };
+struct rayQueryKHR { int noop; };
+struct accelerationStructureKHR { int noop; };
+
+uvec3 LocalInvocationID;
+uint LocalInvocationIndex;
+uvec3 GlobalInvocationID;
+uvec3 WorkGroupID;
+
+void Scattering()
 {
-    uvec3 id = gl_GlobalInvocationID;
-    int x = int(id.x);
-    int y = int(id.y);
-
     int width  = int(VolumeDimensions.x);
     int height = int(VolumeDimensions.y);
     int depth  = int(VolumeDimensions.z);
 
-    if (x >= width || y >= height)
-        return;
+    int x = int(GlobalInvocationID.x);
+    int y = int(GlobalInvocationID.y);
+    if (x >= width || y >= height) return;
 
-    float prevDepth = mix(VolumeNearFar.x, VolumeNearFar.y, 0.0);
-    vec4 scattering = vec4(0.0, 0.0, 0.0, 1.0); // rgb = light, a = transmittance
+    float prevDepth = VolumeNearFar.x;
+    vec4 accum = vec4(0.0, 0.0, 0.0, 1.0);
 
-    const float scatteringBoost = 12.0; // godray multiplier
+    const float scatteringBoost = 12.0; // Godray multiplier
 
     for (int z = 0; z < depth; ++z)
     {
-        float linearZ = float(z) + 0.5;
-        float slice = (exp(5.0 * linearZ / VolumeDimensions.z) - 1.0) * 0.015;
+        // Map slice to nonlinear depth
+        float slice = (exp(5.0 * (float(z) + 0.5) / VolumeDimensions.z) - 1.0) * 0.015;
         float currDepth = mix(VolumeNearFar.x, VolumeNearFar.y, slice);
         float stepLength = currDepth - prevDepth;
         prevDepth = currDepth;
 
+        // Load extinction/lighting from lighting buffer
         vec4 lighting = imageLoad(s_LightingBuffer, ivec3(x, y, z));
         float extinction = lighting.w;
         float transmittance = exp(-extinction * stepLength);
 
-        float opticalDepth = (abs(extinction) > 1e-6)
-            ? (1.0 - transmittance) / extinction
+        float opticalDepth = (abs(extinction) > 1e-6) 
+            ? (1.0 - transmittance) / extinction 
             : stepLength;
 
-        float depthFactor = pow(1.0 - float(z) / float(depth), 3.0); // cubic falloff
+        float depthFactor = pow(1.0 - float(z) / float(depth), 3.0);
         vec3 shaftColor = lighting.rgb * scatteringBoost * depthFactor;
 
-        scattering.rgb += shaftColor * scattering.a * opticalDepth;
-        scattering.a *= transmittance;
+        accum.rgb += accum.a * opticalDepth * shaftColor;
+        accum.a *= transmittance;
 
-        imageStore(s_ScatteringBuffer, ivec3(x, y, z), scattering);
+        imageStore(s_ScatteringBuffer, ivec3(x, y, z), accum);
     }
+}
 
+NUM_THREADS(8, 8, 1)
+void main()
+{
+    LocalInvocationID = gl_LocalInvocationID;
+    LocalInvocationIndex = gl_LocalInvocationIndex;
+    GlobalInvocationID = gl_GlobalInvocationID;
+    WorkGroupID = gl_WorkGroupID;
 
-
+    Scattering();
 }
