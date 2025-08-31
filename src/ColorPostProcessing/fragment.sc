@@ -1,13 +1,10 @@
 $input v_texcoord0
 #include <bgfx_shader.sh>
 
-
 SAMPLER2D_AUTOREG(s_ColorTexture);
 SAMPLER2D_AUTOREG(s_AverageLuminance);
 SAMPLER2D_AUTOREG(s_PreExposureLuminance);
 SAMPLER2D_AUTOREG(s_RasterizedColor);
-
-uniform highp vec4 RasterizedColorEnabled;
 
 vec3 RRTAndODTFit(vec3 v) {
     vec3 a = v * (v + 0.0245786) - 0.000090537;
@@ -33,8 +30,6 @@ vec3 SampleChromatic(vec2 uv, float offset) {
     return clamp(col, 0.0, 1.0);
 }
 
-
-// Generate Gaussian weights dynamically
 float gaussian(float x, float sigma) {
     return exp(-(x*x) / (2.0 * sigma * sigma));
 }
@@ -46,17 +41,18 @@ vec3 RadialBlur(vec2 uv, float radius, int samples, float sigma) {
     for (int i = 0; i < samples; ++i) {
         float a = (float(i) / float(samples)) * 6.2831853; // full circle
         vec2 dir = vec2(cos(a), sin(a));
-                for (int j = -2; j <= 2; ++j) {  // radial steps outwards
+
+        for (int j = -2; j <= 2; ++j) {
             float dist = float(j) * radius;
             float w = gaussian(dist, sigma);
-
-            sum += SampleChromatic(uv + dir * dist, 0.009) * w;
+            sum += SampleChromatic(uv + dir * dist, 0.008) * w;
             weightSum += w;
         }
     }
 
-    return clamp(sum / weightSum, 0.0, 1.0);
+    return sum / max(weightSum, 0.0001); 
 }
+
 float ComputeAutoExposure(vec2 uv) {
     float avgLum = texture2D(s_AverageLuminance, vec2_splat(0.5)).r;
     avgLum = max(avgLum, 0.0001);
@@ -66,10 +62,10 @@ float ComputeAutoExposure(vec2 uv) {
 
     float prevExposure = texture2D(s_PreExposureLuminance, vec2_splat(0.5)).r;
 
-    float adaptationSpeed = 0.02; // lower = slower eye adaptation
+    float adaptationSpeed = 0.005;
     float exposureValue = mix(prevExposure, targetExposure, adaptationSpeed);
 
-    return clamp(exposureValue, 0.8, 8.0);
+    return clamp(exposureValue, 0.9, 4.0);
 }
 
 float AutoBlurStrength(vec2 uv) {
@@ -81,44 +77,32 @@ float AutoBlurStrength(vec2 uv) {
 
     float prevBlur = texture2D(s_PreExposureLuminance, vec2_splat(0.5)).r;
 
-    float adaptationSpeed = 0.1;
+    float adaptationSpeed = 0.05; // slower adaptation
     float depthStrength = mix(prevBlur, targetBlur, adaptationSpeed);
 
-    return clamp(depthStrength, 0.0003, 0.0042);
+    return clamp(depthStrength, 0.0004, 0.0035);
 }
 
 void main() {
-
- vec2 uv = v_texcoord0.xy;
+    vec2 uv = v_texcoord0.xy;
     vec2 center = vec2_splat(0.5);
     float dist = distance(uv, center);
 
     float blurAmount = smoothstep(0.1, 0.5, dist);
     float blurStrength = AutoBlurStrength(uv);
-    float blurRadius = blurAmount * 0.003;
-    vec3 fullscene = RadialBlur(uv, blurRadius,15,0.5);
+    float blurRadius = blurAmount * blurStrength;
+    vec3 fullscene = RadialBlur(uv, blurRadius, 15, 0.5);
 
     float exposureValue = ComputeAutoExposure(uv);
-    fullscene *= 1.6;
+    fullscene *= exposureValue;
 
     vec3 color = ACESFittedTonemap(fullscene);
-
     color = AdjustSaturation(color, 1.3);
 
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
     color *= vignette;
 
-   
-   vec4 finalCol = vec4(color, 1.0);
-vec4 Rcolor = texture2D(s_RasterizedColor, uv);
- 
-   if (RasterizedColorEnabled.x > 0.0)
-    {
-         finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.a)) + finalCol.rgb;
-    }
-    finalCol.rgb = pow(finalCol.rgb, vec3_splat(1.0 / 2.2));
-  
-  gl_FragColor =finalCol;
+    color = pow(color, vec3_splat(1.0 / 2.2));
+
+    gl_FragColor = vec4(color, 1.0);
 }
-
-
