@@ -12,9 +12,9 @@ python3 -m pip install --upgrade pip
 python3 -m pip install lazurite==0.4.2
 
 echo "[4/4] Downloading shaderc for Linux..."
-curl -L -o shaderc-linux-x64 \
+curl -L -o shaderc \
     https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-linux-x64
 
-chmod +x shaderc-linux-x64
+chmod +x shaderc
 
 echo " Setup complete!"
