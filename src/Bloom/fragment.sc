@@ -6,7 +6,6 @@ SAMPLER2D_AUTOREG(s_AverageLuminance);
 SAMPLER2D_AUTOREG(s_HDRi);               // Original HDR image
 SAMPLER2D_AUTOREG(s_RasterizedColor);
 
-uniform vec4 Time;
 uniform vec4 ViewportScale;
 uniform vec4 BloomParams;
 
@@ -91,5 +90,5 @@ void main() {
     color = vec4(result, 1.0);
 #endif
 
-    gl_FragColor = color; // ✅ fixed
+    gl_FragColor = color;
 }
