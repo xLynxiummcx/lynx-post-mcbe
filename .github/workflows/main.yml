@@ -24,9 +24,16 @@ jobs:
         shell: bash
         run: ./build.sh
 
-      - name: Upload build artifacts
+      - name: Upload material.bin files (excluding gameshadersrc)
+        shell: bash
+        run: |
+          mkdir -p upload_temp
+          # find all files containing "material.bin" but exclude gameshadersrc/
+          find . -type f -name '*material.bin*' ! -path './gameshadersrc/*' -exec cp --parents {} upload_temp/ \;
+        continue-on-error: false
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
-          path: |
-            ./*
+          name: material-files
+          path: upload_temp/**
