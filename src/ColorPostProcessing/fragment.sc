@@ -26,15 +26,15 @@ vec3 AdjustSaturation(vec3 color, float saturation) {
     return mix(vec3(avg, avg, avg), color, saturation);
 }
 
-vec3 SampleChromaticStable(vec2 uv, float chromaOffset) {
+vec3 SampleChromaticStable(sampler2D tex, vec2 uv, float chromaOffset) {
     vec3 col;
-    col.r = texture(s_ColorTexture, uv + vec2(chromaOffset, 0.0)).r;
-    col.g = texture(s_ColorTexture, uv).g;
-    col.b = texture(s_ColorTexture, uv - vec2(chromaOffset, 0.0)).b;
+    col.r = texture(tex, vec2(uv.x + chromaOffset, uv.y)).r;
+    col.g = texture(tex, vec2(uv.x, uv.y)).g;
+    col.b = texture(tex, vec2(uv.x - chromaOffset, uv.y)).b;
     return col;
 }
 
-vec3 RadialBlurStable(vec2 uv, float radius, int samples, float sigma) {
+vec3 RadialBlurStable(sampler2D tex, vec2 uv, float radius, int samples, float sigma) {
     vec3 sum = vec3(0.0, 0.0, 0.0);
     float weightSum = 0.0;
 
@@ -46,8 +46,8 @@ vec3 RadialBlurStable(vec2 uv, float radius, int samples, float sigma) {
             float dist = float(j) * radius;
             float w = gaussian(dist, sigma);
 
-            vec2 sampleUV = uv + dir * dist;
-            sum += SampleChromaticStable(sampleUV, 0.003) * w;
+            vec2 sampleUV = vec2(uv.x + dir.x * dist, uv.y + dir.y * dist);
+            sum += SampleChromaticStable(tex, sampleUV, 0.003) * w;
             weightSum += w;
         }
     }
@@ -55,30 +55,28 @@ vec3 RadialBlurStable(vec2 uv, float radius, int samples, float sigma) {
     return clamp(sum / weightSum, vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
 }
 
-float ComputeAutoExposure(vec2 uv) {
-    float avgLum = texture(s_AverageLuminance, vec2(0.5, 0.5)).r;
+float ComputeAutoExposure(sampler2D avgLumTex, sampler2D prevExposureTex, vec2 uv) {
+    float avgLum = texture(avgLumTex, vec2(0.5, 0.5)).r;
     avgLum = max(avgLum, 0.0001);
 
     float targetLum = 0.18;
     float targetExposure = targetLum / avgLum;
 
-    float prevExposure = texture(s_PreExposureLuminance, vec2(0.5, 0.5)).r;
-
+    float prevExposure = texture(prevExposureTex, vec2(0.5, 0.5)).r;
     float adaptationSpeed = 0.02;
     float exposureValue = mix(prevExposure, targetExposure, adaptationSpeed);
 
     return clamp(exposureValue, 0.8, 8.0);
 }
 
-float AutoBlurStrength(vec2 uv) {
-    float avgLum = texture(s_AverageLuminance, vec2(0.5, 0.5)).r;
+float AutoBlurStrength(sampler2D avgLumTex, sampler2D prevBlurTex, vec2 uv) {
+    float avgLum = texture(avgLumTex, vec2(0.5, 0.5)).r;
     avgLum = max(avgLum, 0.0001);
 
     float targetLum = 0.18;
     float targetBlur = targetLum / avgLum;
 
-    float prevBlur = texture(s_PreExposureLuminance, vec2(0.5, 0.5)).r;
-
+    float prevBlur = texture(prevBlurTex, vec2(0.5, 0.5)).r;
     float adaptationSpeed = 0.1;
     float depthStrength = mix(prevBlur, targetBlur, adaptationSpeed);
 
@@ -86,7 +84,7 @@ float AutoBlurStrength(vec2 uv) {
 }
 
 void main() {
-    vec2 uv = v_texcoord0.xy;
+    vec2 uv = vec2(v_texcoord0.x, v_texcoord0.y);
     vec2 center = vec2(0.5, 0.5);
     float dist = distance(uv, center);
 
@@ -97,19 +95,19 @@ void main() {
     coc = clamp(coc, 0.0, 1.0);
 
     float blurAmount = smoothstep(0.1, 0.5, dist);
-    float blurStrength = AutoBlurStrength(uv);
+    float blurStrength = AutoBlurStrength(s_AverageLuminance, s_PreExposureLuminance, uv);
     float blurRadius = blurAmount * blurStrength * coc;
-    vec3 fullscene = RadialBlurStable(uv, blurRadius, 15, 0.5);
+    vec3 fullscene = RadialBlurStable(s_ColorTexture, uv, blurRadius, 15, 0.5);
 
-    float exposureValue = ComputeAutoExposure(uv);
-    fullscene *= exposureValue;
+    float exposureValue = ComputeAutoExposure(s_AverageLuminance, s_PreExposureLuminance, uv);
+    fullscene = vec3(fullscene.r * exposureValue, fullscene.g * exposureValue, fullscene.b * exposureValue);
 
     vec3 color = ACESFittedTonemap(fullscene);
     color = AdjustSaturation(color, 1.3);
 
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
-    color *= vignette;
+    color = vec3(color.r * vignette, color.g * vignette, color.b * vignette);
 
-    color = pow(color, vec3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));
-    gl_FragColor = vec4(color, 1.0);
+    color = vec3(pow(color.r, 1.0 / 2.2), pow(color.g, 1.0 / 2.2), pow(color.b, 1.0 / 2.2));
+    gl_FragColor = vec4(color.r, color.g, color.b, 1.0);
 }
