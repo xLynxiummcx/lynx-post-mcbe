@@ -111,9 +111,10 @@ void main() {
     color = pow(color, vec3_splat(1.0 / 2.2));
    
    vec4 finalCol = vec4(color, 1.0);
+          vec4 Rcolor = texture2D(s_RasterizedColor, uv);
+ 
    if (RasterizedColorEnabled.x > 0.0)
     {
-        vec4 Rcolor = texture(s_RasterizedColor, uv);
          finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.a)) + finalCol.rgb;
     }
   gl_FragColor =finalCol;
