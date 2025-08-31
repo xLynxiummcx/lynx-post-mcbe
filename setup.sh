@@ -1,25 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "[1/4] Updating package lists..."
-if command -v apt >/dev/null 2>&1; then
-    sudo apt update -y
-elif command -v pkg >/dev/null 2>&1; then
-    pkg update -y
-fi
+echo "[1/3] Updating package lists..."
+sudo apt update -y
 
-echo "[2/4] Installing Python 3 and pip..."
-if command -v apt >/dev/null 2>&1; then
-    sudo apt install -y python3 python3-pip curl
-elif command -v pkg >/dev/null 2>&1; then
-    pkg install -y python curl
-fi
+echo "[2/3] Installing Python 3 and pip..."
+sudo apt install -y python3 python3-pip curl
 
-echo "[3/4] Installing lazurite..."
+echo "[3/3] Installing lazurite 0.4.2..."
 python3 -m pip install --upgrade pip
-python3 -m pip install lazurite
+python3 -m pip install lazurite==0.4.2
 
-echo "[4/4] Downloading shaderc-win-x64.exe..."
-curl -L -o shaderc-linux-x64.exe \
+echo "[4/4] Downloading shaderc for Linux..."
+curl -L -o shaderc-linux-x64 \
     https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-linux-x64
-echo "Setup complete!"
+
+chmod +x shaderc-linux-x64
+
+echo " Setup complete!"
