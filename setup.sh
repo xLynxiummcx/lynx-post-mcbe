@@ -20,7 +20,6 @@ python3 -m pip install --upgrade pip
 python3 -m pip install lazurite
 
 echo "[4/4] Downloading shaderc-win-x64.exe..."
-curl -L -o shaderc-win-x64.exe \
-    https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-win-x64.exe
-
+curl -L -o shaderc-linux-x64.exe \
+    https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-linux-x64
 echo "Setup complete!"
