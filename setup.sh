@@ -1,20 +1,18 @@
 #!/bin/bash
 set -e
 
-echo "[1/3] Updating package lists..."
-sudo apt update -y
+echo "[1/3] Checking Python 3..."
+# GitHub Windows runners already have Python, update pip
+python -m pip install --upgrade pip
 
-echo "[2/3] Installing Python 3 and pip..."
-sudo apt install -y python3 python3-pip curl
+echo "[2/3] Installing lazurite 0.4.2..."
+python -m pip install lazurite==0.4.2
 
-echo "[3/3] Installing lazurite 0.4.2..."
-python3 -m pip install --upgrade pip
-python3 -m pip install lazurite==0.4.2
+echo "[3/3] Downloading shaderc for Windows..."
+curl -L -o shaderc.exe "https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-win-x64.exe"
 
-echo "[4/4] Downloading shaderc for Linux..."
-curl -L -o shaderc \
-    https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-linux-x64
-
+# Rename for easier usage in Bash
+mv shaderc.exe shaderc
 chmod +x shaderc
 
-echo " Setup complete!"
+echo "Setup complete!"

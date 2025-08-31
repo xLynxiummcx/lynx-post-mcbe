@@ -5,25 +5,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Make scripts executable
-        run: |
-          chmod +x setup.sh
-          chmod +x build.sh
-
       - name: Run setup.sh
+        shell: bash
         run: ./setup.sh
 
       - name: Run build.sh
+        shell: bash
         run: ./build.sh
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: ./dist/**   # change this to where your build.sh puts files
+          path: ./dist/**   # Change this if your build.sh outputs elsewhere
