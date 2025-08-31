@@ -1,10 +1,7 @@
-name: Build and Upload
+name: Manual Build
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -29,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: ./dist/**   # change this to the folder where your build.sh outputs files
+          path: ./dist/**   # change this to where your build.sh puts files
