@@ -44,12 +44,11 @@ vec3 RadialBlur(vec2 uv, float radius, int samples, float sigma) {
     for (int i = 0; i < samples; ++i) {
         float a = (float(i) / float(samples)) * 6.2831853; // full circle
         vec2 dir = vec2(cos(a), sin(a));
-        vec2 newuv = uv + dir;
-        for (int j = -2; j <= 2; ++j) {  // radial steps outwards
+                for (int j = -2; j <= 2; ++j) {  // radial steps outwards
             float dist = float(j) * radius;
             float w = gaussian(dist, sigma);
 
-            sum += SampleChromatic(newuv * dist, 0.009) * w;
+            sum += SampleChromatic(uv + dir * dist, 0.009) * w;
             weightSum += w;
         }
     }
@@ -94,11 +93,11 @@ void main() {
 
     float blurAmount = smoothstep(0.1, 0.5, dist);
     float blurStrength = AutoBlurStrength(uv);
-    float blurRadius = blurAmount * blurStrength;
+    float blurRadius = blurAmount * 0.003;
     vec3 fullscene = RadialBlur(uv, blurRadius,15,0.5);
 
     float exposureValue = ComputeAutoExposure(uv);
-    fullscene *= exposureValue;
+    fullscene *= 1.6;
 
     vec3 color = ACESFittedTonemap(fullscene);
 
