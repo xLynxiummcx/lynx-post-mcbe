@@ -113,8 +113,8 @@ void main() {
    vec4 finalCol = vec4(color, 1.0);
    if (RasterizedColorEnabled.x > 0.0)
     {
-        highp vec4 Rcolor = texture(s_RasterizedColor, v_texcoord0.xy);
-         finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.w)) + finalCol.xyz;
+        vec4 Rcolor = texture(s_RasterizedColor, uv);
+         finalCol.rgb = (finalCol.rgb * (1.0 - Rcolor.a)) + finalCol.rgb;
     }
   gl_FragColor =finalCol;
 }
