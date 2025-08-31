@@ -4,7 +4,6 @@ $input v_texcoord0
 SAMPLER2D_AUTOREG(s_BlurPyramidTexture);
 SAMPLER2D_AUTOREG(s_AverageLuminance);
 SAMPLER2D_AUTOREG(s_HDRi);               // Original HDR image
-SAMPLER2D_AUTOREG(s_RasterizedColor);
 
 uniform vec4 ViewportScale;
 uniform vec4 BloomParams;
