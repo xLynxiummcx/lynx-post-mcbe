@@ -44,12 +44,12 @@ vec3 RadialBlur(vec2 uv, float radius, int samples, float sigma) {
     for (int i = 0; i < samples; ++i) {
         float a = (float(i) / float(samples)) * 6.2831853; // full circle
         vec2 dir = vec2(cos(a), sin(a));
-
+        vec2 newuv = uv + dir;
         for (int j = -2; j <= 2; ++j) {  // radial steps outwards
             float dist = float(j) * radius;
             float w = gaussian(dist, sigma);
 
-            sum += SampleChromatic(uv + dir * dist, 0.009) * w;
+            sum += SampleChromatic(newuv * dist, 0.009) * w;
             weightSum += w;
         }
     }
