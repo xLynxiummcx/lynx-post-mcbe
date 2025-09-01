@@ -19,25 +19,24 @@ SAMPLER2DARRAY_AUTOREG(s_ScatteringBuffer);
 void main()
 {
     vec4 outColor;
-   highp vec4 _910 = texture2D(s_MatTexture, v_texcoord0);
+    highp vec4 matColor = texture2D(s_MatTexture, v_texcoord0);
 
-bool isNight = SunDir.y <= 0.1;
+    bool isNight = (SunDir.y <= 0.1);
 
-vec4 determinecol;
-if (isNight) {
-    determinecol = _910;
-} else {
-    determinecol = vec4(0.0,0.0,0.0);
-}
- outColor = determinecol;
+    vec4 determineCol;
+    if (isNight) {
+        determineCol = matColor;
+    } else {
+        determineCol = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+
+    outColor = determineCol;
 
     if (PreExposureEnabled.x > 0.0)
     {
-        outColor.rgb = outColor.rgb * ((0.180000007152557373046875 / texture2D(s_PreviousFrameAverageLuminance, vec2_splat(0.5)).x) + 9.9999997473787516355514526367188e-05);
+        float avgLum = texture2D(s_PreviousFrameAverageLuminance, vec2(0.5, 0.5)).x;
+        outColor.rgb *= (0.18 / avgLum) + 1e-4;
     }
-    else
-    {
-        outColor.rgb = outColor.rgb;
-    }
-    gl_FragColor = outColor;
+
+    bgfx_FragData0 = outColor;
 }
