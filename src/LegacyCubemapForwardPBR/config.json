@@ -2,10 +2,8 @@
 
 "passes": {
 
-"DFDownSample": "DFDownSample",
-"DFUpSample": "DFUpSample",
-"ThresholdedDownSample": "ThresholdedDownSample",
-"BloomBlend": "BloomBlend"
+"ForwardPBRTransparent": "SKY",
+"ForwardPBRTransparentSkyProbe": "SKYPROBE"
 },
 "file_overwrite": {
 "default": {
