@@ -38,5 +38,5 @@ void main()
         outColor.rgb *= (0.18 / avgLum) + 1e-4;
     }
 
-    bgfx_FragData0 = outColor;
+    gl_FragColor = outColor;
 }
