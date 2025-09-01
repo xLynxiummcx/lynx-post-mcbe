@@ -1,22 +1,27 @@
-$input a_color0,a_position, a_texcoord0
+$input a_color0, a_position, a_texcoord0
 $output v_clipPosition, v_color0, v_texcoord0, v_worldPos
- 
+
 uniform highp vec4 ViewportScale;
 uniform mat4 CubemapRotation;
 uniform vec4 SubPixelOffset;
 
 #include <bgfx_shader.sh>
 
-void main() { 
+void main()
+{
+    vec4 worldPos = mul(u_model[0], mul(CubemapRotation, vec4(a_position, 1.0)));
 
-  vec4 _513 = u_model[0] * (CubemapRotation * vec4(a_position, 1.0));
-    mat4 _523 = u_proj;
-    _523[2].x += SubPixelOffset.x;
-    _523[2].y -= SubPixelOffset.y;
-    vec4 _546 = _523 * (u_view * vec4(_513.xyz, 1.0));
-    v_clipPosition = _546;
-    v_color0 = a_color0;
-    v_texcoord0 = a_texcoord0;
-    v_worldPos = _513.xyz;
-    gl_Position = _546;
+    mat4 proj = u_proj;
+    proj[2].x += SubPixelOffset.x;
+    proj[2].y -= SubPixelOffset.y;
+
+    vec4 clipPos = mul(proj, mul(u_view, worldPos));
+
+    v_clipPosition = clipPos;
+    v_color0      = a_color0;
+    v_texcoord0   = a_texcoord0;
+    v_worldPos    = worldPos.xyz;
+
+    // Final vertex position
+    gl_Position = clipPos;
 }
