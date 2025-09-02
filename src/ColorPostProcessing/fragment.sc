@@ -97,10 +97,14 @@ void main() {
     fullscene *= exposureValue;
 
     vec3 color = ACESFittedTonemap(fullscene);
+    #ifdef LYNX_SATURATION
     color = AdjustSaturation(color, 1.3);
+    #endif
 
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
+    #ifdef LYNX_VIGNETTE
     color *= vignette;
+#endif
 
     color = pow(color, vec3_splat(1.0 / 2.2));
 

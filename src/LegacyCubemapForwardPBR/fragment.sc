@@ -21,6 +21,9 @@ void main()
     vec4 outColor;
     highp vec4 matColor = texture2D(s_MatTexture, v_texcoord0);
 
+if(matColor.a < 0.5){
+    discard;
+}
     bool isNight = (SunDir.y <= 0.1);
 
     vec4 determineCol;
@@ -30,7 +33,7 @@ void main()
         determineCol = vec4(0.0, 0.0, 0.0, 0.0);
     }
 
-    outColor = determineCol;
+    outColor = determineCol * 0.75;
 
     if (PreExposureEnabled.x > 0.0)
     {
