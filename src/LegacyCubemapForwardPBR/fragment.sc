@@ -33,7 +33,7 @@ if(matColor.a < 0.01){
         determineCol = vec4(0.0, 0.0, 0.0, 0.0);
     }
 
-    outColor = determineCol * 0.75;
+  outColor = mix(vec4(0.0,0.0,0.0,0.0),determineCol, 0.45);
 
     if (PreExposureEnabled.x > 0.0)
     {
