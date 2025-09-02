@@ -26,10 +26,7 @@ void main()
     float prevDepth = mix(VolumeNearFar.x, VolumeNearFar.y, 0.0);
     vec4 scattering = vec4(0.0, 0.0, 0.0, 1.0); // rgb = light, a = transmittance
 
-    float scatteringBoost = 11.8;
-    if(FogAndDistanceControl.x == 0.0){
-    scatteringBoost = 2.0;
-    }
+    const float scatteringBoost = 12.0;
     
     for (int z = 0; z < depth; ++z)
     {
