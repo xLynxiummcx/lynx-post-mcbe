@@ -1,5 +1,6 @@
 $input v_texcoord0
 #include <bgfx_shader.sh>
+#include <config.h>
 
 SAMPLER2D_AUTOREG(s_ColorTexture);
 SAMPLER2D_AUTOREG(s_AverageLuminance);

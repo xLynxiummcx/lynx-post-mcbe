@@ -4,6 +4,7 @@
 
 uniform vec4 VolumeDimensions; // x: width, y: height, z: depth
 uniform vec4 VolumeNearFar;    // x: near, y: far
+uniform vec4 FogAndDistanceControl;
 
 IMAGE2D_ARRAY_RO_AUTOREG(s_LightingBuffer, rgba16f);
 IMAGE2D_ARRAY_WR_AUTOREG(s_ScatteringBuffer, rgba16f);
@@ -25,8 +26,11 @@ void main()
     float prevDepth = mix(VolumeNearFar.x, VolumeNearFar.y, 0.0);
     vec4 scattering = vec4(0.0, 0.0, 0.0, 1.0); // rgb = light, a = transmittance
 
-    const float scatteringBoost = 12.0; // godray multiplier
-
+    float scatteringBoost = 11.8;
+    if(FogAndDistanceControl.x == 0.0){
+    scatteringBoost = 2.0;
+    }
+    
     for (int z = 0; z < depth; ++z)
     {
         float linearZ = float(z) + 0.5;
@@ -43,7 +47,7 @@ void main()
             ? (1.0 - transmittance) / extinction
             : stepLength;
 
-        float depthFactor = pow(1.0 - float(z) / float(depth), 3.0); // cubic falloff
+        float depthFactor = pow(1.0 - float(z) / float(depth), 3.0);
         vec3 shaftColor = lighting.rgb * scatteringBoost * depthFactor;
 
         scattering.rgb += shaftColor * scattering.a * opticalDepth;
