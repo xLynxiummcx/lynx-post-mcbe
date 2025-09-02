@@ -21,7 +21,7 @@ void main()
     vec4 outColor;
     highp vec4 matColor = texture2D(s_MatTexture, v_texcoord0);
 
-if(matColor.a < 0.999){
+if(matColor.a < 0.01){
     discard;
 }
     bool isNight = (SunDir.y <= 0.1);
