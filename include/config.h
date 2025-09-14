@@ -1,2 +1,2 @@
-#define LYNX_SATURATION
+//#define LYNX_SATURATION
 //#define LYNX_VIGNETTE
