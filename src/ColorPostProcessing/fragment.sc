@@ -81,7 +81,7 @@ float AutoBlurStrength(vec2 uv) {
     float adaptationSpeed = 0.05; // slower adaptation
     float depthStrength = mix(prevBlur, targetBlur, adaptationSpeed);
 
-    return clamp(depthStrength, 0.0004, 0.0035);
+    return clamp(depthStrength, 0.00015, 0.0035);
 }
 
 void main() {
