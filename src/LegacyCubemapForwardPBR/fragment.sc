@@ -21,17 +21,11 @@ void main()
     vec4 outColor;
     highp vec4 matColor = texture2D(s_MatTexture, v_texcoord0);
 
-if(matColor.a < 0.01){
-    discard;
-}
+
     bool isNight = (SunDir.y <= 0.1);
 
-    vec4 determineCol;
-    if (isNight) {
-        determineCol = matColor;
-    } else {
-        determineCol = vec4(0.0, 0.0, 0.0, 0.0);
-    }
+float t = isNight ? 1.0 : 0.0;
+vec4 determineCol = mix(vec4(0.0, 0.0, 0.0, 0.0), matColor, t);
 
   outColor = mix(vec4(0.0,0.0,0.0,0.0),determineCol, 0.45);
 
