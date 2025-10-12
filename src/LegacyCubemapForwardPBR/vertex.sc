@@ -21,7 +21,5 @@ void main()
     v_color0      = a_color0;
     v_texcoord0   = a_texcoord0;
     v_worldPos    = worldPos.xyz;
-
-    // Final vertex position
     gl_Position = clipPos;
 }

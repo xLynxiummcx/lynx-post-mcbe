@@ -1,0 +1,291 @@
+{
+  "biomes": {
+    "default": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "soulsand_valley": {
+      "fog_identifier": "lynx:default"
+    },
+    "hell": {
+      "fog_identifier": "lynx:default"
+    },
+    "plains": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "ice_plains": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "ice_mountains": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "ice_plains_spikes": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "cold_taiga": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "cold_taiga_hills": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "cold_taiga_mutated": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "desert": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "desert_hills": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mesa": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mesa_bryce": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mesa_mutated": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mesa_plateau": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mesa_plateau_stone": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mushroom_island": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "mushroom_island_shore": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "jungle": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "jungle_edge": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "jungle_hills": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "jungle_mutated": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "bamboo_jungle": {
+      "water_surface_color": "#484be4",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "frozen_ocean": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "frozen_river": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "frozen_peaks": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "snowy_slopes": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "jagged_peaks": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "grove": {
+      "water_surface_color": "#44AFF5",
+      "water_surface_transparency": 1.0,
+      "fog_identifier": "lynx:default"
+    },
+    "swampland": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#44AFF5"
+    },
+    "taiga": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#287082",
+      "water_surface_transparency": 1.0
+    },
+    "taiga_hills": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#236583",
+      "water_surface_transparency": 1.0
+    },
+    "taiga_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "mega_taiga": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "mega_spruce_taiga": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "mega_spruce_taiga_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "mega_taiga_hills": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "mega_taiga_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "cherry_grove": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E6B82",
+      "water_surface_transparency": 1.0
+    },
+    "deep_dark": {
+      "water_surface_color": "#1787D4",
+      "fog_identifier": "lynx:default"
+    },
+    "savanna": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2C8B9C"
+    },
+    "savanna_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "savanna_plateau": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "mangrove_swamp": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "lush_caves": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "basalt_deltas": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "crimson_forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "warped_forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "beach": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "roofed_forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "roofed_forest_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_transparency": 1.0,
+      "water_surface_color": "#2590A8"
+    },
+    "birch_forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#0677ce"
+    },
+    "birch_forest_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#0677ce"
+    },
+    "birch_forest_hills": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#0a74c4"
+    },
+    "flower_forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#20A3CC"
+    },
+    "forest": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#1E97F2"
+    },
+    "forest_hills": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#056bd1"
+    },
+    "redwood_taiga_mutated": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#056bd1"
+    },
+    "the_end": {
+      "fog_identifier": "lynx:default",
+      "water_surface_color": "#056bd1"
+    }
+  }
+}
