@@ -138,7 +138,7 @@ void main() {
     float blurAmount = smoothstep(0.1, 0.5, dist);
     float blurStrength = AutoBlurStrength(uv);
     float blurRadius = blurAmount * blurStrength;
-    vec3 fullscene = RadialBlur(uv, blurRadius, 15, 0.5);
+    vec3 fullscene = RadialBlur(uv, blurRadius, 8, 0.5);
 
     float exposureValue = ComputeAutoExposure(uv);
     fullscene *= exposureValue;
