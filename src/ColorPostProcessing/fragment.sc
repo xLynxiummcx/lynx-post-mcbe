@@ -67,7 +67,7 @@ float ComputeAutoExposure(vec2 uv) {
 
     float prevExposure = texture2D(s_PreExposureLuminance, vec2(0.5, 0.5)).r;
 
-    float adaptationSpeed = 0.1;
+    float adaptationSpeed = 0.08;
     float exposureValue = mix(prevExposure, targetExposure, adaptationSpeed);
 
     return clamp(exposureValue, 0.9, 4.0);
@@ -145,7 +145,7 @@ void main() {
     fullscene *= exposureValue;
 
     vec3 color = ACESFittedTonemap(fullscene);
-    color = AdjustSaturation(color, 1.1);
+    color = AdjustSaturation(color, 1.3);
 
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
     color *= vignette;
