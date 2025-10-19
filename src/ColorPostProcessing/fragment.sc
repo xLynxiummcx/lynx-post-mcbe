@@ -6,6 +6,7 @@ SAMPLER2D_AUTOREG(s_ColorTexture);
 SAMPLER2D_AUTOREG(s_AverageLuminance);
 SAMPLER2D_AUTOREG(s_PreExposureLuminance);
 SAMPLER2D_AUTOREG(s_RasterizedColor);
+uniform highp vec4 ViewportScale;
 
 uniform vec4 FogColor;
 uniform vec4 Time;
@@ -66,7 +67,7 @@ float ComputeAutoExposure(vec2 uv) {
 
     float prevExposure = texture2D(s_PreExposureLuminance, vec2(0.5, 0.5)).r;
 
-    float adaptationSpeed = 0.005;
+    float adaptationSpeed = 0.1;
     float exposureValue = mix(prevExposure, targetExposure, adaptationSpeed);
 
     return clamp(exposureValue, 0.9, 4.0);
@@ -81,7 +82,7 @@ float AutoBlurStrength(vec2 uv) {
 
     float prevBlur = texture2D(s_PreExposureLuminance, vec2(0.5, 0.5)).r;
 
-    float adaptationSpeed = 0.05; // slower adaptation
+    float adaptationSpeed = 0.2; 
     float depthStrength = mix(prevBlur, targetBlur, adaptationSpeed);
 
     return clamp(depthStrength, 0.00015, 0.0035);
@@ -118,7 +119,7 @@ float hash12(vec2 p) {
     return fract((p3.x + p3.y) * p3.z);
 }
 
-lowp float noise(vec2 p) {
+    float noise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
     vec2 u = f * f * (3.0 - 2.0 * f);
@@ -138,13 +139,13 @@ void main() {
     float blurAmount = smoothstep(0.1, 0.5, dist);
     float blurStrength = AutoBlurStrength(uv);
     float blurRadius = blurAmount * blurStrength;
-    vec3 fullscene = RadialBlur(uv, blurRadius, 8, 0.5);
+    vec3 fullscene = RadialBlur(uv, blurRadius, 5, 0.5);
 
     float exposureValue = ComputeAutoExposure(uv);
     fullscene *= exposureValue;
 
     vec3 color = ACESFittedTonemap(fullscene);
-    color = AdjustSaturation(color, 1.3);
+    color = AdjustSaturation(color, 1.1);
 
     float vignette = pow(1.0 - smoothstep(0.25, 0.8, dist), 1.8);
     color *= vignette;
@@ -152,9 +153,10 @@ void main() {
     vec2 c = gl_FragCoord.xy;
     vec2 resolution = u_viewRect.zw;
     vec2 u = c / resolution;
-    vec2 v = (c * 0.1) / resolution.xy;
+    u = u * ViewportScale.xy;
+    vec2 v = (c * 0.1) / resolution.xy*ViewportScale.xy;
     float n = noise(v * 200.0);
-    vec4 baseBlur = blur(s_ColorTexture, u, resolution.xy, 0.75);
+    vec4 baseBlur = blur(s_ColorTexture, u, resolution.xy*ViewportScale.xy, 0.75);
     vec4 f = baseBlur;
 
     for (float r = 4.0; r > 0.0; r--) {
